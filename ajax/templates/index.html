@@ -1,0 +1,48 @@
+<html>
+<head>
+    <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+</head>
+<body>
+    <p id="example">AJAX</p>
+    <input type="text" id="id1" placeholder="id">
+    <input type="text" id="password1" placeholder="password">
+    <input type="text" id="email1" placeholder="email">
+    <input type="button" id="execute" value="execute">
+
+    <a href="{{url_for('post')}}"><button>Go Post HTML</button></a>
+    <div id='div2'>
+        
+    </div>
+    <script>
+        $('#execute').click(function(){
+            var id = $('#id1').val();
+            var password = $('#password1').val();
+            var email = $('#email1').val();
+
+            var postdata = {
+                'id':id, 'password':password, 'email':email
+            }
+            $.ajax({
+                type: 'POST',
+                url: '{{url_for("ajax")}}',
+                data: JSON.stringify(postdata),
+                dataType : 'JSON',
+                contentType: "application/json",
+                success: function(data){
+                    alert('성공! 데이터 값')
+                    var str1 = ''
+                    $.each(data.result2, function(key,value){
+                        alert(key + " : " + value.id + " " +value.password+ " " + value.email)
+                        str1 += '<div>'+ value.id + " / " + value.password + " / " + value.email  +'</div>'
+                    })
+                    $('#div2').html(str1)
+                },
+                error: function(request, status, error){
+                    alert('ajax 통신 실패')
+                    alert(error);
+                }
+            })
+        })
+    </script>
+</body>
+</html>

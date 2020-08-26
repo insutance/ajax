@@ -1,0 +1,45 @@
+<html>
+<head>
+    <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+</head>
+<body>
+    <p id="example">AJAX POST</p>
+    <div id='div2'>
+        {% for user in users %}
+        <div>{{user.id}} : {{user.password}} : {{user.email}}</div>
+        <button class="delete_record" user_id="{{user.id}}">delete</button><br><br>
+        {% endfor %}
+    </div>
+    <script>
+        $(document).on('click', '.delete_record', function(){
+            id = $(this).attr("user_id");
+            $.ajax({
+                type: 'POST',
+                url: '/post',
+                data: JSON.stringify({
+                    'id': id
+                }),
+                dataType : 'JSON',
+                contentType: "application/json",
+                success: function(data){
+                    alert('성공! 데이터 값')
+                    var str1 = ''
+                    $.each(data.result2, function(key,value){
+                        str1 += '<div>'+ value.id + " / " + value.password + " / " + value.email  +'</div>'
+                        str1 += '<button class="delete_record" user_id="' + value.id + '"> delete </button><br><br>'
+                    })
+                    $('#div2').html(str1)
+                },
+                error: function(request, status, error){
+                    alert('ajax 통신 실패')
+                    console.log(error)
+                    alert(status)
+                    alert(error);
+                }
+            })
+        })
+        
+    </script>
+    
+</body>
+</html>
